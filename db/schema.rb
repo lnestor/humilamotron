@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_08_233642) do
+ActiveRecord::Schema.define(version: 2018_06_09_201510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "groups", force: :cascade do |t|
+    t.string "name"
+    t.integer "groupme_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["groupme_id"], name: "index_groups_on_groupme_id", unique: true
+  end
 
   create_table "liked_messages", force: :cascade do |t|
     t.string "content"
