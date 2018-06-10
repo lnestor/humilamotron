@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col-10">
+    <h1 class="mb-4">
+      <%= @user.name %>
+      <small class="text-muted">Shame Count: <%= @user.liked_messages.count %></small>
+    </h1>
+  </div>
+</div>
+
+<% @user.liked_messages.each do |msg| %>
+  <div class="card mb-4">
+    <div class="card-body">
+      <blockquote class="mb-0 blockquote">
+        <p class="mb-0"><%= msg.content %></p>
+        <footer class="blockquote-footer">Group Name Placeholder at <%= msg.created_at .to_formatted_s(:long) %></footer>
+      </blockquote>
+    </div>
+  </div>
+<% end %>
