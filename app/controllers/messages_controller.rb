@@ -13,7 +13,7 @@ class MessagesController < ApplicationController
               User.create!(groupme_id: message[:user_id], name: message[:name])
             end
 
-            LikedMessage.create!(user: User.find_by_groupme_id(message[:user_id]), content: message[:text], group_groupme_id: params[:group_id], groupme_id: message[:id])
+            LikedMessage.create!(user: User.find_by_groupme_id(message[:user_id]), content: message[:text], group: Group.find_by_groupme_id(params[:group_id]), groupme_id: message[:id])
           end
         end
       end

@@ -1,8 +1,8 @@
 FactoryBot.define do
   factory :liked_message do
     content 'some content'
-    groupme_id 123
-    group_groupme_id 123
+    sequence(:groupme_id) { |n| n }
+    group
     user
   end
 end

@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_09_201510) do
+ActiveRecord::Schema.define(version: 2018_06_10_001324) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "groups", force: :cascade do |t|
     t.string "name"
-    t.integer "groupme_id"
+    t.bigint "groupme_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["groupme_id"], name: "index_groups_on_groupme_id", unique: true
@@ -25,18 +25,19 @@ ActiveRecord::Schema.define(version: 2018_06_09_201510) do
 
   create_table "liked_messages", force: :cascade do |t|
     t.string "content"
-    t.integer "groupme_id"
+    t.bigint "groupme_id"
     t.bigint "user_id"
-    t.integer "group_groupme_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "group_id"
+    t.index ["group_id"], name: "index_liked_messages_on_group_id"
     t.index ["groupme_id"], name: "index_liked_messages_on_groupme_id", unique: true
     t.index ["user_id"], name: "index_liked_messages_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
-    t.integer "groupme_id"
+    t.bigint "groupme_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["groupme_id"], name: "index_users_on_groupme_id", unique: true
