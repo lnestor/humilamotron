@@ -1,24 +1,61 @@
-# README
+# Humilamorton
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Keeps track of how often your friends like their own messages in GroupMe.
 
-Things you may want to cover:
+## Getting Started
 
-* Ruby version
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-* System dependencies
+### Installing
 
-* Configuration
+First, clone this repository with `git clone https://github.com/lnestor/humilamotron.git`
 
-* Database creation
+## Running the tests
 
-* Database initialization
+Run the specs with `bundle exec rspec`.
 
-* How to run the test suite
+## Adding your access token
 
-* Services (job queues, cache servers, search engines, etc.)
+GroupMe provides developers with an access token that must be added to your project. Your personal access token can be found at https://dev.groupme.com/ and pressing the Access Token button in the navbar. The token is currently stored as an environment variable using the [Figaro](https://github.com/laserlemon/figaro) gem for development. To set this token in development, run `bundle exec figaro install` and place the following in `config/application.yml`.
 
-* Deployment instructions
+```
+access_token: <your access token>
+```
 
-* ...
+## Deployment
+
+If deploying to Heroku, run the following steps:
+
+```
+heroku create
+git push heroku master
+heroku run rake db:migrate
+heroku config:set access_token=<your access token>
+heroku run
+```
+
+## Whitelisting groups
+
+Currently there is not way to whitelist groups from the application. Instead, you must go to the command line. In development, this can be done with the following:
+
+```
+bundle exec rails console
+Group.create!(name: "My Name", groupme_id: <your group's ID from GroupMe>)
+```
+
+In production with Heroku, this can be done with the following:
+
+```
+heroku run rails console
+Group.create!(name: "My Name", groupme_id: <your group's ID from GroupMe>)
+```
+
+## Built With
+
+* [Rails](https://rubyonrails.org/) - The web framework used
+* [GroupMe](https://groupme.com/en-US/) - The API used
+* [Bootstrap](https://getbootstrap.com/) - For styling
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
