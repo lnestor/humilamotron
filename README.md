@@ -55,7 +55,3 @@ Group.create!(name: "My Name", groupme_id: <your group's ID from GroupMe>)
 * [Rails](https://rubyonrails.org/) - The web framework used
 * [GroupMe](https://groupme.com/en-US/) - The API used
 * [Bootstrap](https://getbootstrap.com/) - For styling
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
