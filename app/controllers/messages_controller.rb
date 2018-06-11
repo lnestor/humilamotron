@@ -2,7 +2,7 @@ class MessagesController < ApplicationController
   before_action :authenticate_group
 
   def incoming
-    response = Faraday.get("https://api.groupme.com/v3/groups/#{params[:group_id]}/messages?token=#{ENV['access_token']}&limit=10")
+    response = Faraday.get(messages_url(params[:group_id])
     messages = JSON.parse(response.body, symbolize_names: true)[:response][:messages]
 
     messages.each do |message|
@@ -21,6 +21,10 @@ class MessagesController < ApplicationController
   end
 
   private
+
+  def messages_url(group_id)
+    "https://api.groupme.com/v3/groups/#{group_id}/messages?token=#{ENV['access_token']}&limit=10"
+  end
 
   def authenticate_group
     if !Group.exists?(groupme_id: params[:group_id])

@@ -1,6 +1,7 @@
 <div class="row">
   <div class="col-10">
     <h1 class="mb-4">
+      <%= link_to (octicon 'reply', height: 22), root_path, method: :get %>
       <%= @user.name %>
       <small class="text-muted">Shame Count: <%= @user.liked_messages.count %></small>
     </h1>

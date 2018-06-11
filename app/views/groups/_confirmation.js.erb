@@ -1,0 +1,2 @@
+$("#group-confirmation-content").html("<%= escape_javascript(render partial: 'groups/confirmation.html.erb', locals: { group_name: group_name }) %>");
+$("#group-confirmation").modal("show");
