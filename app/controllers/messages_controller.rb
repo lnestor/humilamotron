@@ -1,11 +1,9 @@
 class MessagesController < ApplicationController
   before_action :authenticate_group
+  before_action :call_groupme_api
 
   def incoming
-    response = Faraday.get(messages_url(params[:group_id]))
-    messages = JSON.parse(response.body, symbolize_names: true)[:response][:messages]
-
-    messages.each do |message|
+    @messages.each do |message|
       if !LikedMessage.exists?(groupme_id: message[:id])
         message[:favorited_by].each do |like_id|
           if like_id == message[:user_id]
@@ -30,5 +28,10 @@ class MessagesController < ApplicationController
     if !Group.exists?(groupme_id: params[:group_id])
       head :unauthorized
     end
+  end
+
+  def call_groupme_api
+    response = Faraday.get(messages_url(params[:group_id]))
+    @messages = JSON.parse(response.body, symbolize_names: true)[:response][:messages]
   end
 end

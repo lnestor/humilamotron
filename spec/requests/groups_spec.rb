@@ -16,7 +16,7 @@ RSpec.describe 'Group Create', type: :request do
       before { get '/manage' }
 
       it 'redirects to the home page' do
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to '/admin/sign_in'
       end
 
       it 'displays an unauthorized message' do
@@ -125,7 +125,7 @@ RSpec.describe 'Group Create', type: :request do
       before { post '/groups/create' }
 
       it 'redirects to the home page' do
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to '/admin/sign_in'
       end
 
       it 'displays an unauthorized message' do
@@ -180,7 +180,7 @@ RSpec.describe 'Group Create', type: :request do
       before { delete '/groups/delete/123123' }
 
       it 'redirects to the home page' do
-        expect(response).to redirect_to root_path
+        expect(response).to redirect_to '/admin/sign_in'
       end
 
       it 'displays an unauthenticated message' do
