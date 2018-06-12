@@ -24,12 +24,7 @@ RSpec.describe 'checking if a group exists', type: :feature, js: true do
           sign_in admin
         end
 
-        it 'displays the confirmation modal' do
-          visit '/manage'
-          within('#confirmation-form') { fill_in 'groupme_id', with: '123' }
-          click_button 'Check Group'
-          expect(page).to have_content 'some name'
-        end
+        it 'displays the confirmation modal'
       end
 
       context 'when the group does not exist' do

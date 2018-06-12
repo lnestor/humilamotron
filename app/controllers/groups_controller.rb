@@ -8,12 +8,28 @@ class GroupsController < ApplicationController
 
   def create
     response = Faraday.get(groups_url(params[:groupme_id]))
+    parsed_response = JSON.parse(response.body, symbolize_names: true)
 
-    if(response.code == '200')
-      name = JSON.parse(response.body, symbolize_names: true)[:response][:name]
-      Group.create(groupme_id: params[:groupme_id], name: name)
+    if(parsed_response[:meta][:code] == 200)
+      if !Group.exists?(groupme_id: params[:groupme_id])
+        name = JSON.parse(response.body, symbolize_names: true)[:response][:name]
+        Group.create(groupme_id: params[:groupme_id], name: name)
+      else
+        flash[:alert] = 'Group is already allowed.'
+      end
     else
       flash[:alert] = 'Group Not Found'
+    end
+
+    redirect_to '/manage'
+  end
+
+  def destroy
+    if Group.exists?(params[:id])
+      Group.find(params[:id]).delete
+      flash[:notice] = 'Successfully deleted group.'
+    else
+      flash[:alert] = 'Group not found.'
     end
 
     redirect_to '/manage'

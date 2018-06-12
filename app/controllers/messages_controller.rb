@@ -2,7 +2,7 @@ class MessagesController < ApplicationController
   before_action :authenticate_group
 
   def incoming
-    response = Faraday.get(messages_url(params[:group_id])
+    response = Faraday.get(messages_url(params[:group_id]))
     messages = JSON.parse(response.body, symbolize_names: true)[:response][:messages]
 
     messages.each do |message|

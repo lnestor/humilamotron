@@ -30,37 +30,62 @@ RSpec.describe 'Group Create', type: :request do
       let(:admin) { FactoryBot.create(:admin) }
 
       context 'with valid params' do
-        let(:group_params) { { groupme_id: 12345 } }
+        let(:groupme_id) { 12345 }
+        let(:group_params) { { groupme_id: groupme_id } }
 
         before do
-          allow(Faraday).to receive_message_chain('get.code').and_return(api_response_code)
           allow(Faraday).to receive_message_chain('get.body').and_return(api_response)
           sign_in admin
-          post '/groups/create', params: group_params
         end
 
-        context 'when group exists' do
+        context 'when groupme recognizes the group' do
           let(:api_response) do
             %Q({
               "response": {
                 "name": "Some Group Name"
+              },
+              "meta": {
+                "code": 200
               }
             })
           end
-          let(:api_response_code) { '200' }
 
-          it 'creates a group in the database' do
-            expect(Group.count).to eq 1
+          context 'when the group is not already in the databse' do
+            before { post '/groups/create', params: group_params }
+
+            it 'creates a group in the database' do
+              expect(Group.count).to eq 1
+            end
+
+            it 'redirects to the manage page' do
+              expect(response).to redirect_to('/manage')
+            end
           end
 
-          it 'redirects to the manage page' do
-            expect(response).to redirect_to('/manage')
+          context 'when the group already exists in the database' do
+            before do
+              FactoryBot.create(:group, groupme_id: groupme_id)
+              post '/groups/create', params: group_params
+            end
+
+            it 'does not create a group in the database' do
+              expect(Group.count).to eq 1
+            end
+
+            it 'displays an error message' do
+              expect(flash[:alert]).to eq 'Group is already allowed.'
+            end
+
+            it 'redirects to the manage page' do
+              expect(response).to redirect_to '/manage'
+            end
           end
         end
 
-        context 'when group does not exist' do
-          let(:api_response) { nil }
-          let(:api_response_code) { '404' }
+        context 'when groupme does not recognize the group' do
+          let(:api_response) { %Q({ "meta": { "code": 404 } }) }
+
+          before { post '/groups/create', params: group_params }
 
           it 'does not create a group in the database' do
             expect(Group.count).to eq 0
@@ -104,6 +129,61 @@ RSpec.describe 'Group Create', type: :request do
       end
 
       it 'displays an unauthorized message' do
+        expect(flash[:alert]).to_not be_nil
+      end
+    end
+  end
+
+  describe '#destroy' do
+    context 'when signed in as an admin' do
+      let(:admin) { FactoryBot.create(:admin) }
+
+      context 'when the group exists' do
+        let(:group) { FactoryBot.create(:group) }
+
+        before do
+          sign_in admin
+          delete "/groups/delete/#{group.id}"
+        end
+
+        it 'deletes the record from the database' do
+          expect(Group.count).to eq 0
+        end
+
+        it 'displays a successful flash message' do
+          expect(flash[:notice]).to eq 'Successfully deleted group.'
+        end
+
+        it 'redirects to the manage page' do
+          expect(response).to redirect_to '/manage'
+        end
+      end
+
+      context 'when the group does not exist' do
+        before do
+          sign_in admin
+          delete '/groups/delete/1234123'
+        end
+
+        it 'displays an error flash message' do
+          expect(flash[:alert]).to eq 'Group not found.'
+        end
+
+        it 'redirects to the manage page' do
+          expect(response).to redirect_to '/manage'
+        end
+
+      end
+    end
+
+    context 'when not signed in' do
+      before { delete '/groups/delete/123123' }
+
+      it 'redirects to the home page' do
+        expect(response).to redirect_to root_path
+      end
+
+      it 'displays an unauthenticated message' do
         expect(flash[:alert]).to_not be_nil
       end
     end

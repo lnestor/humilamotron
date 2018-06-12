@@ -4,10 +4,16 @@ class GroupChecksController < ApplicationController
 
   def create
     if @code == 200
-      group_name = @parsed_response[:response][:name]
+      if !Group.exists?(groupme_id: params[:groupme_id])
+        group_name = @parsed_response[:response][:name]
 
-      respond_to do |format|
-        format.js { render partial: 'groups/confirmation.js.erb', locals: { group_name: group_name } }
+        respond_to do |format|
+          format.js { render partial: 'groups/confirmation.js.erb', locals: { group_name: group_name, groupme_id: params[:groupme_id] } }
+      end
+      else
+        respond_to do |format|
+          format.js { render partial: 'groups/already_exists.js.erb' }
+        end
       end
     else
       respond_to do |format|

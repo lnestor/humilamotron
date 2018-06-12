@@ -7,4 +7,5 @@ Rails.application.routes.draw do
   get '/manage', to: 'groups#index'
   post '/groups/create', to: 'groups#create'
   post '/group_check', to: 'group_checks#create'
+  delete '/groups/delete/:id', to: 'groups#destroy'
 end
