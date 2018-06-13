@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   root 'users#index'
   get '/users/:id', to: 'users#show'
+  delete '/users/delete/:id', to: 'users#destroy'
 
   post '/messages', to: 'messages#incoming'
 
