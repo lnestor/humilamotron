@@ -6,14 +6,24 @@ class GroupChecksController < ApplicationController
     if @code == 200
       if !Group.exists?(groupme_id: params[:groupme_id])
         group_name = @parsed_response[:response][:name]
+        group_image = @parsed_response[:response][:image_url]
 
         respond_to do |format|
-          format.js { render partial: 'groups/confirmation.js.erb', locals: { group_name: group_name, groupme_id: params[:groupme_id] } }
-      end
-      else
-        respond_to do |format|
-          format.js { render partial: 'groups/already_exists.js.erb' }
+          format.js do 
+            render partial: 'groups/confirmation.js.erb', 
+              locals: { 
+                partial: 'groups/group_add', 
+                partial_id: '#group-add', 
+                locals_hash: { 
+                  group_name: group_name, 
+                  groupme_id: params[:groupme_id], 
+                  group_image: group_image 
+                } 
+              }
+          end
         end
+      else
+        display_already_exists
       end
     else
       display_not_found
@@ -38,7 +48,27 @@ class GroupChecksController < ApplicationController
 
   def display_not_found
     respond_to do |format|
-      format.js { render partial: 'groups/group_not_found.js.erb' }
+      format.js do
+        render partial: 'groups/confirmation.js.erb', 
+          locals: { 
+            partial: 'groups/group_not_found', 
+            partial_id: '#group-not-found', 
+            locals_hash: {} 
+          } 
+      end
+    end
+  end
+
+  def display_already_exists
+    respond_to do |format|
+      format.js do
+        render partial: 'groups/confirmation.js.erb', 
+          locals: { 
+            partial: 'groups/group_already_exists', 
+            partial_id: '#group-already-exists', 
+            locals_hash: {} 
+          } 
+      end
     end
   end
 end
