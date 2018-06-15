@@ -1,4 +1,5 @@
 class MessagesController < ApplicationController
+  protect_from_forgery with: :null_session
   before_action :authenticate_group
   before_action :call_groupme_api
 
