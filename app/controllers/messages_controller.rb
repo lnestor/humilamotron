@@ -21,7 +21,7 @@ class MessagesController < ApplicationController
   private
 
   def messages_url(group_id)
-    "https://api.groupme.com/v3/groups/#{group_id}/messages?token=#{ENV['access_token']}&limit=10"
+    "https://api.groupme.com/v3/groups/#{group_id}/messages?token=#{ENV['GROUPME_ACCESS_TOKEN']}&limit=10"
   end
 
   def authenticate_group

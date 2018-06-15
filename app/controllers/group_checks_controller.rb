@@ -37,7 +37,7 @@ class GroupChecksController < ApplicationController
   end
   
   def groups_url(id)
-    "https://api.groupme.com/v3/groups/#{id}?access_token=#{ENV['access_token']}"
+    "https://api.groupme.com/v3/groups/#{id}?access_token=#{ENV['GROUPME_ACCESS_TOKEN']}"
   end
 
   def call_groupme_api
