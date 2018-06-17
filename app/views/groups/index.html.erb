@@ -23,7 +23,7 @@
       <tr>
         <td><%= group.name %></td>
         <td><%= group.groupme_id %></td>
-        <td><%= button_to 'Delete', "/groups/delete/#{group.id}", method: :delete, class: 'text-right btn btn-danger' %></td>
+        <td><div class="text-right"><%= button_to 'Delete', "/groups/delete/#{group.id}", method: :delete, class: 'btn btn-danger' %></div></td>
       </tr>
     <% end %>
   </tbody>

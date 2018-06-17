@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :authenticate_admin!, only: :destroy
 
   def index
-    @users = User.all
+    @users = User.all.sort_by { |u| u.liked_messages.count }.reverse
   end
 
   def show
