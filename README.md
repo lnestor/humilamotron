@@ -1,4 +1,4 @@
-# Humilamorton
+# Humilamotron
 
 Keeps track of how often your friends like their own messages in GroupMe.
 
@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Installing
 
-First, clone this repository with `git clone https://github.com/lnestor/humilamotron.git`
+First, clone this repository with `git clone https://github.com/lnestor/humilamotron.git`.
 
 ## Deployment
 
