@@ -27,7 +27,8 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
                   "group_id": "12345",
                   "name": "#{user.name}",
                   "text": "message content",
-                  "favorited_by": ["#{user.groupme_id}"]
+                  "favorited_by": ["#{user.groupme_id}"],
+                  "attachments": []
                 }]
               }
             })
@@ -54,10 +55,11 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
                   "group_id": "12345",
                   "name": "First Last",
                   "text": "message content",
-                  "favorited_by": ["12345"]
+                  "favorited_by": ["12345"],
+                  "attachments": []
                 }]
               }
-            }).gsub(/\s+/, "")
+            })
           end
 
           before { post '/messages', params: post_params }
@@ -74,6 +76,61 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
             expect(LikedMessage.first.user.groupme_id).to eq 12345
           end
         end
+
+        context 'when the message has an image attachment' do
+          let(:user) { FactoryBot.create(:user) }
+          let(:message_response) do
+            %Q({
+              "response": {
+                "messages": [{
+                  "id": "12345",
+                  "user_id": "#{user.groupme_id}",
+                  "group_id": "12345",
+                  "name": "#{user.name}",
+                  "text": "message content",
+                  "favorited_by": ["#{user.groupme_id}"],
+                  "attachments": [{
+                    "type": "image",
+                    "url": "some url"
+                  }]
+                }]
+              }
+            })
+          end
+          
+          before { post '/messages', params: post_params }
+
+          it 'adds an image url to the record in the database' do
+            expect(LikedMessage.first.image_url).to eq 'some url'
+          end
+        end
+
+        context 'when the message has a non image attachment' do
+          let(:user) { FactoryBot.create(:user) }
+          let(:message_response) do
+            %Q({
+              "response": {
+                "messages": [{
+                  "id": "12345",
+                  "user_id": "#{user.groupme_id}",
+                  "group_id": "12345",
+                  "name": "#{user.name}",
+                  "text": "message content",
+                  "favorited_by": ["#{user.groupme_id}"],
+                  "attachments": [{
+                    "type": "some type"
+                  }]
+                }]
+              }
+            })
+          end
+          
+          before { post '/messages', params: post_params }
+
+          it 'does not add an image url to the database' do
+            expect(LikedMessage.first.image_url).to eq nil
+          end
+        end
       end
       
       context 'when the message has already been logged' do
@@ -87,10 +144,11 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
                 "group_id": "12345",
                 "name": "First Last",
                 "text": "message content",
-                "favorited_by": ["12345"]
+                "favorited_by": ["12345"],
+                "attachments": []
               }]
             }
-          }).gsub(/\s+/, "")
+          })
         end
 
         before { post '/messages', params: post_params }
@@ -111,7 +169,8 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
               "group_id": "12345",
               "name": "First Last",
               "text": "message content",
-              "favorited_by": ["92374"]
+              "favorited_by": ["92374"],
+              "attachments": []
             }]
           }
         }).gsub(/\s+/, "")

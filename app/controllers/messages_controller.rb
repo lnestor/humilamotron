@@ -12,7 +12,7 @@ class MessagesController < ApplicationController
               User.create!(groupme_id: message[:user_id], name: message[:name])
             end
 
-            LikedMessage.create!(user: User.find_by_groupme_id(message[:user_id]), content: message[:text], group: Group.find_by_groupme_id(params[:group_id]), groupme_id: message[:id])
+            LikedMessage.create!(user: User.find_by_groupme_id(message[:user_id]), content: message[:text], group: Group.find_by_groupme_id(params[:group_id]), groupme_id: message[:id], image_url: message_image(message))
           end
         end
       end
@@ -34,5 +34,14 @@ class MessagesController < ApplicationController
   def call_groupme_api
     response = Faraday.get(messages_url(params[:group_id]))
     @messages = JSON.parse(response.body, symbolize_names: true)[:response][:messages]
+  end
+
+  def message_image(msg)
+    msg[:attachments].each do |attachment|
+      if attachment[:type] == 'image'
+        return attachment[:url]
+      end
+    end
+    nil
   end
 end
