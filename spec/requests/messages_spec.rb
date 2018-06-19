@@ -1,38 +1,48 @@
 require 'rails_helper'
 
 RSpec.describe 'receiving messages from GroupMe', type: :request do
-  let(:message_response) { nil }
+  let(:id) { '12345' }
+  let(:user_id) { '12345' }
+  let(:group_id) { '12345' }
+  let(:name) { 'first last' }
+  let(:favorited_by) { [] }
+  let(:attachments) { [] }
+  let(:message_hash) do
+    {
+      response: {
+        messages: [{
+          id: "#{id}",
+          user_id: "#{user_id}",
+          group_id: "#{group_id}",
+          name: "#{name}",
+          text: 'message content',
+          favorited_by: favorited_by,
+          attachments: attachments
+        }]
+      }
+    }
+  end
+
   before do
-    allow(Faraday).to receive_message_chain('get.body').and_return(message_response)
+    allow(Faraday).to receive('get').and_return(double(body: message_hash.to_json))
   end
 
   context 'when the group is registered' do
     let(:group) { FactoryBot.create(:group) }
+    let(:group_id) { group.id }
     let(:post_params) do
       {
         group_id: "#{group.groupme_id}"
       }
     end
-    
+
     context 'when a user likes their own message' do
       context 'when the message has not been logged' do
         context 'when the user is in the database' do
           let(:user) { FactoryBot.create(:user) }
-          let(:message_response) do
-            %Q({
-              "response": {
-                "messages": [{
-                  "id": "12345",
-                  "user_id": "#{user.groupme_id}",
-                  "group_id": "12345",
-                  "name": "#{user.name}",
-                  "text": "message content",
-                  "favorited_by": ["#{user.groupme_id}"],
-                  "attachments": []
-                }]
-              }
-            })
-          end
+          let(:user_id) { user.groupme_id }
+          let(:name) { user.name }
+          let(:favorited_by) { ["#{user.groupme_id}"] }
 
           before { post '/messages', params: post_params }
 
@@ -46,21 +56,7 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
         end
 
         context 'when the user is not in the database' do
-          let(:message_response) do
-            %Q({
-              "response": {
-                "messages": [{
-                  "id": "12345",
-                  "user_id": "12345",
-                  "group_id": "12345",
-                  "name": "First Last",
-                  "text": "message content",
-                  "favorited_by": ["12345"],
-                  "attachments": []
-                }]
-              }
-            })
-          end
+          let(:favorited_by) { ["#{user_id}"] }
 
           before { post '/messages', params: post_params }
 
@@ -78,26 +74,9 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
         end
 
         context 'when the message has an image attachment' do
-          let(:user) { FactoryBot.create(:user) }
-          let(:message_response) do
-            %Q({
-              "response": {
-                "messages": [{
-                  "id": "12345",
-                  "user_id": "#{user.groupme_id}",
-                  "group_id": "12345",
-                  "name": "#{user.name}",
-                  "text": "message content",
-                  "favorited_by": ["#{user.groupme_id}"],
-                  "attachments": [{
-                    "type": "image",
-                    "url": "some url"
-                  }]
-                }]
-              }
-            })
-          end
-          
+          let(:favorited_by) { ["#{user_id}"] }
+          let(:attachments) { [{ type: "image", url: "some url" }] }
+
           before { post '/messages', params: post_params }
 
           it 'adds an image url to the record in the database' do
@@ -106,25 +85,9 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
         end
 
         context 'when the message has a non image attachment' do
-          let(:user) { FactoryBot.create(:user) }
-          let(:message_response) do
-            %Q({
-              "response": {
-                "messages": [{
-                  "id": "12345",
-                  "user_id": "#{user.groupme_id}",
-                  "group_id": "12345",
-                  "name": "#{user.name}",
-                  "text": "message content",
-                  "favorited_by": ["#{user.groupme_id}"],
-                  "attachments": [{
-                    "type": "some type"
-                  }]
-                }]
-              }
-            })
-          end
-          
+          let(:favorited_by) { ["#{user_id}"] }
+          let(:attachments) { [{ type: "some type" }] }
+
           before { post '/messages', params: post_params }
 
           it 'does not add an image url to the database' do
@@ -132,24 +95,10 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
           end
         end
       end
-      
+
       context 'when the message has already been logged' do
         let(:liked_message) { FactoryBot.create(:liked_message) }
-        let(:message_response) do
-          %Q({
-            "response": {
-              "messages": [{
-                "id": "#{liked_message.groupme_id}",
-                "user_id": "12345",
-                "group_id": "12345",
-                "name": "First Last",
-                "text": "message content",
-                "favorited_by": ["12345"],
-                "attachments": []
-              }]
-            }
-          })
-        end
+        let(:id) { liked_message.groupme_id }
 
         before { post '/messages', params: post_params }
 
@@ -160,21 +109,7 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
     end
 
     context 'when the user did not like their own message' do
-      let(:message_response) do
-        %Q({
-          "response": {
-            "messages": [{
-              "id": "12345",
-              "user_id": "12345",
-              "group_id": "12345",
-              "name": "First Last",
-              "text": "message content",
-              "favorited_by": ["92374"],
-              "attachments": []
-            }]
-          }
-        }).gsub(/\s+/, "")
-      end
+      let(:favorited_by) { ["4325"] }
 
       before { post '/messages', params: post_params }
 
