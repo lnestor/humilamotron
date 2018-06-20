@@ -12,7 +12,7 @@ First, clone this repository with `git clone https://github.com/lnestor/humilamo
 
 ### Configuring your Environment
 
-This app uses PostgreSQL and assumes there is a user with username `postgres` and password `postgres`. You can change the username and password used by configuring `config/database.yml`. Learn how to create a postgres usere [here.](https://www.codementor.io/engineerapart/getting-started-with-postgresql-on-mac-osx-are8jcopb) Then run `bundle exec rake db:setup` to create the development and testing databases.
+This app uses PostgreSQL and assumes there is a user with username `postgres` and password `postgres`. You can change the username and password used by configuring `config/database.yml`. Learn how to create a postgres user [here.](https://www.codementor.io/engineerapart/getting-started-with-postgresql-on-mac-osx-are8jcopb) Then run `bundle exec rake db:setup` to create the development and testing databases.
 
 ### Running Unit Tests
 
