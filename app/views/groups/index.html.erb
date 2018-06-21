@@ -1,10 +1,9 @@
 <%= form_tag('/group_check', remote: true, class: 'mb-4', id: 'confirmation-form') do |f| %>
-  <div class="form-row">
-    <div class="col-10">
-      <%= label_tag 'groupme_id', nil, class: 'sr-only' %>
-      <%= text_field_tag 'groupme_id', nil, class: 'form-control', placeholder: "Enter your group's ID" %>
-    </div>
-    <div class="col-2">
+  <div class="input-group">
+    <%= label_tag 'groupme_id', nil, class: 'sr-only' %>
+    <%= text_field_tag 'groupme_id', nil, class: 'form-control', placeholder: "Enter your group's ID" %>
+    
+    <div class="input-group-append">
       <%= submit_tag 'Check Group', class: 'btn btn-primary' %>
     </div>
   </div>

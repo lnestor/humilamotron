@@ -1,16 +1,15 @@
-<div class="row">
-  <div class="col-10">
-    <h1 class="mb-4">
+<div class="row mb-3">
+  <div class="col-md-auto">
+    <h1>
       <%= link_to (octicon 'reply', height: 22), root_path, method: :get %>
       <%= @user.name %>
       <small class="text-muted">Shame Count: <%= @user.liked_messages.count %></small>
     </h1>
   </div>
-  <div class="col">
+  <div class="col"></div>
+  <div class="col-md-auto mt-2">
     <% if current_admin %>
-      <div class="text-right">
-        <button class="btn btn-danger mt-2 mb-2">Delete</button>
-      </div>
+      <button class="btn btn-danger">Delete</button>
     <% end %>
   </div>
 </div>
