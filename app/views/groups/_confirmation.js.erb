@@ -1,2 +1,2 @@
-$("#group-confirmation-content").html("<%= escape_javascript(render partial: partial, locals: locals_hash ) %>");
-$("<%= partial_id %>").modal("show");
+$("#group-confirmation-content").html("<%= escape_javascript(render partial: "groups/#{partial}", locals: locals_hash ) %>");
+$("#<%= partial.dasherize %>").modal("show");

@@ -5,23 +5,7 @@ class GroupChecksController < ApplicationController
   def create
     if @code == 200
       if !Group.exists?(groupme_id: params[:groupme_id])
-        group_name = @parsed_response[:response][:name]
-        group_image = @parsed_response[:response][:image_url]
-
-        respond_to do |format|
-          format.js do 
-            render partial: 'groups/confirmation.js.erb', 
-              locals: { 
-                partial: 'groups/group_add', 
-                partial_id: '#group-add', 
-                locals_hash: { 
-                  group_name: group_name, 
-                  groupme_id: params[:groupme_id], 
-                  group_image: group_image 
-                } 
-              }
-          end
-        end
+        display_group_add
       else
         display_already_exists
       end
@@ -46,28 +30,29 @@ class GroupChecksController < ApplicationController
     @code = @parsed_response[:meta][:code]
   end
 
+  def display_modal(partial_name:, local_vars: {})
+    render partial: 'groups/confirmation.js.erb', locals: { partial: partial_name, locals_hash: local_vars }
+  end
+
   def display_not_found
     respond_to do |format|
-      format.js do
-        render partial: 'groups/confirmation.js.erb', 
-          locals: { 
-            partial: 'groups/group_not_found', 
-            partial_id: '#group-not-found', 
-            locals_hash: {} 
-          } 
-      end
+      format.js { display_modal partial_name: 'group_not_found' }
     end
   end
 
   def display_already_exists
     respond_to do |format|
+      format.js { display_modal partial_name: 'group_already_exists' }
+    end
+  end
+  
+  def display_group_add
+    group_name = @parsed_response[:response][:name]
+    group_image = @parsed_response[:response][:image_url]
+
+    respond_to do |format|
       format.js do
-        render partial: 'groups/confirmation.js.erb', 
-          locals: { 
-            partial: 'groups/group_already_exists', 
-            partial_id: '#group-already-exists', 
-            locals_hash: {} 
-          } 
+        display_modal partial_name: 'group_add', local_vars: { group_name: group_name, groupme_id: params[:groupme_id], group_image: group_image }
       end
     end
   end
