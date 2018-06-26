@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<% @user.liked_messages.each do |msg| %>
+<% @user.liked_messages.order('created_at DESC').each do |msg| %>
   <div class="card mb-4">
     <div class="card-body">
       <blockquote class="mb-0 blockquote">

@@ -70,6 +70,10 @@ heroku run rails console
 Admin.create!(email: <YOUR EMAIL>, password: <YOUR PASSWORD>, password_confirmation: <YOUR PASSWORD>)
 ```
 
+## Whitelisting a Group
+
+GroupMe groups must be granted access to write data to the application. To do this, find your group's ID at https://dev.groupme.com/bots. Copy and past the ID into the form on the Manage page. Then you can grant access to that group.
+
 ## Built With
 
 * [Rails](https://rubyonrails.org/) - The web framework used
