@@ -12,6 +12,9 @@
             <%= link_to 'Manage', '/manage', class: 'nav-link' %>
           </li>
           <li class="nav-item">
+            <%= link_to 'Upload File', '/upload', class: 'nav-link' %>
+          </li>
+          <li class="nav-item">
             <%= link_to 'Sign Out', destroy_admin_session_path, method: :delete, class: 'nav-link' %>
           </li>
         <% else %>

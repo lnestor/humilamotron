@@ -12,4 +12,7 @@ Rails.application.routes.draw do
   delete '/groups/delete/:id', to: 'groups#destroy'
 
   post '/group_check', to: 'group_checks#create'
+
+  get '/upload', to: 'message_uploads#new'
+  post '/upload', to: 'message_uploads#create'
 end

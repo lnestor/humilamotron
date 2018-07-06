@@ -1,0 +1,73 @@
+[
+  {
+    "attachments": [],
+    "created_at": 1503626008,
+    "favorited_by": [],
+    "group_id": "12345",
+    "id": "1",
+    "name": "GroupMe",
+    "sender_id": "system",
+    "sender_type": "system",
+    "system": true,
+    "text": "Jerry Seinfeld added Elaine Benis to the group.",
+    "user_id": "system",
+    "event": {
+      "type": "membership.announce.added",
+      "data": {
+        "added_users": [
+          {
+            "id": 4,
+            "nickname": "Elaine Benis"
+          }
+        ],
+        "adder_user": {
+          "id": 3,
+          "nickname": "Jerry Seinfeld"
+        }
+      }
+    }
+  },
+  {
+    "attachments": [],
+    "created_at": 1503637492,
+    "favorited_by": [
+      "3"
+    ],
+    "group_id": "12345",
+    "id": "2",
+    "name": "George Costanza",
+    "sender_id": "1",
+    "sender_type": "user",
+    "system": false,
+    "text": "liked but not by yourself",
+    "user_id": "1"
+  },
+  {
+    "attachments": [],
+    "created_at": 1503637492,
+    "favorited_by": [],
+    "group_id": "12345",
+    "id": "3",
+    "name": "Kramer",
+    "sender_id": "4",
+    "sender_type": "user",
+    "system": false,
+    "text": "not liked",
+    "user_id": "4"
+  },
+  {
+    "attachments": [],
+    "created_at": 1503637492,
+    "favorited_by": [
+      "4"
+    ],
+    "group_id": "12345",
+    "id": "4",
+    "name": "Kramer",
+    "sender_id": "4",
+    "sender_type": "user",
+    "system": false,
+    "text": "liked by yourself",
+    "user_id": "4"
+  }
+]
