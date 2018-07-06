@@ -24,26 +24,39 @@ RSpec.describe 'uploading a messages JSON file', type: :request do
     context 'when signed in as an admin' do
       let(:admin) { FactoryBot.create(:admin) }
 
+      before { sign_in admin }
+
       context 'when the file is valid JSON' do
         context 'when the file is valid GroupMe JSON' do
-          it 'creates records in the database for liked messages' do
-            file = fixture_file_upload('valid_messages_json.json')
+          let(:file) { fixture_file_upload('valid_messages_json.json') }
 
+          before do
             Group.create!(name: 'some group', groupme_id: 12345)
-            sign_in admin
             post '/upload', params: { file: file }
+          end
 
+          it 'creates records in the database for liked messages' do
             expect(LikedMessage.count).to eq 1
           end
         end
 
         context 'when the file is not valid GroupMe JSON' do
-          it 'displays an error to the user'
+          let(:file) { fixture_file_upload('invalid_groupme_messages_json.json') }
+
+          it 'fails gracefully and allows the user to upload a new file' do
+            expect { post '/upload', params: { file: file } }.to_not raise_exception
+            expect(LikedMessage.count).to eq 0
+          end
         end
       end
 
       context 'when the file is not valid JSON' do
-        it 'displays an error to the user'
+        let(:file) { fixture_file_upload('invalid_json.json') }
+
+        it 'fails gracefully and allows the user to upload a new file' do
+          expect { post '/upload', params: { file: file } }.to_not raise_exception
+          expect(LikedMessage.count).to eq 0
+        end
       end
     end
 

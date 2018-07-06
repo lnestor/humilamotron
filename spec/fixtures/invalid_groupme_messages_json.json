@@ -1,0 +1,32 @@
+[
+  {
+    "attachments": [],
+    "created_at": 1503637492,
+    "favorited_by": [
+      "3"
+    ],
+    "group_id": "12345",
+    "id": "2",
+    "name_TYPO": "some name",
+    "sender_id": "1",
+    "sender_type": "user",
+    "system": false,
+    "text": "liked but not by yourself",
+    "user_id": "123445435234"
+  },
+  {
+    "attachments": [],
+    "created_at": 1503637492,
+    "favorited_by": [
+      "4"
+    ],
+    "group_id": "12345",
+    "id": "50",
+    "name_TYPO": "another name",
+    "sender_id": "4",
+    "sender_type": "user",
+    "system": false,
+    "text": "liked by yourself",
+    "user_id": "12312312"
+  }
+]

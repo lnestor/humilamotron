@@ -12,6 +12,7 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
       response: {
         messages: [{
           id: "#{id}",
+          created_at: 1302623328,
           user_id: "#{user_id}",
           group_id: "#{group_id}",
           name: "#{name}",
@@ -29,7 +30,7 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
 
   context 'when the group is registered' do
     let(:group) { FactoryBot.create(:group) }
-    let(:group_id) { group.id }
+    let(:group_id) { group.groupme_id }
     let(:post_params) do
       {
         group_id: "#{group.groupme_id}"
