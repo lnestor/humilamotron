@@ -6,7 +6,7 @@
       "3"
     ],
     "group_id": "12345",
-    "id": "2",
+    "id": "12341234",
     "name_TYPO": "some name",
     "sender_id": "1",
     "sender_type": "user",
@@ -18,10 +18,10 @@
     "attachments": [],
     "created_at": 1503637492,
     "favorited_by": [
-      "4"
+      "12312312"
     ],
     "group_id": "12345",
-    "id": "50",
+    "id": "123412342134",
     "name_TYPO": "another name",
     "sender_id": "4",
     "sender_type": "user",

@@ -44,7 +44,7 @@ RSpec.describe 'uploading a messages JSON file', type: :request do
           let(:file) { fixture_file_upload('invalid_groupme_messages_json.json') }
 
           it 'fails gracefully and allows the user to upload a new file' do
-            expect { post '/upload', params: { file: file } }.to_not raise_exception
+            expect { post '/upload', xhr: true, params: { file: file } }.to_not raise_exception
             expect(LikedMessage.count).to eq 0
           end
         end
@@ -54,7 +54,7 @@ RSpec.describe 'uploading a messages JSON file', type: :request do
         let(:file) { fixture_file_upload('invalid_json.json') }
 
         it 'fails gracefully and allows the user to upload a new file' do
-          expect { post '/upload', params: { file: file } }.to_not raise_exception
+          expect { post '/upload', xhr: true, params: { file: file } }.to_not raise_exception
           expect(LikedMessage.count).to eq 0
         end
       end

@@ -13,7 +13,14 @@ class MessageUploadsController < ApplicationController
       messages.each do |message|
         LikedMessageChecker.check_message(message)
       end
+    rescue JSON::ParserError
+      respond_to do |format|
+        format.js { render partial: 'message_uploads/display_error.js.erb', locals: { error_msg: 'JSON is invalid.' } }
+      end
     rescue
+      respond_to do |format|
+        format.js { render partial: 'message_uploads/display_error.js.erb', locals: { error_msg: 'JSON is valid but not in format expected.' } }
+      end
     end
   end
 end
