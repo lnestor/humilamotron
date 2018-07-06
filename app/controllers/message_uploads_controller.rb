@@ -15,7 +15,7 @@ class MessageUploadsController < ApplicationController
               User.create!(groupme_id: message[:user_id], name: message[:name])
             end
 
-            LikedMessage.create!(user: User.find_by_groupme_id(message[:user_id]), content: message[:text], group: Group.find_by_groupme_id(message[:group_id]), groupme_id: message[:id], image_url: message_image(message))
+            LikedMessage.create!(user: User.find_by_groupme_id(message[:user_id]), content: message[:text], group: Group.find_by_groupme_id(message[:group_id]), groupme_id: message[:id], image_url: message_image(message), created_at: Time.at(message[:created_at]))
           end
         end
       end
