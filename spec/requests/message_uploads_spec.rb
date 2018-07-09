@@ -28,15 +28,76 @@ RSpec.describe 'uploading a messages JSON file', type: :request do
 
       context 'when the file is valid JSON' do
         context 'when the file is valid GroupMe JSON' do
-          let(:file) { fixture_file_upload('valid_messages_json.json') }
+          context 'when the group already exists' do
+            let(:file) { fixture_file_upload('valid_messages_json.json') }
+            let(:group_id) { '12345' }
 
-          before do
-            Group.create!(name: 'some group', groupme_id: 12345)
-            post '/upload', params: { file: file }
+            before do
+              Group.create!(name: 'some group', groupme_id: group_id)
+              post '/upload', params: { file: file }
+            end
+
+            it 'creates records in the database for liked messages' do
+              expect(LikedMessage.count).to eq 1
+            end
+
+            it 'does not create a group in the database' do
+              expect(Group.count).to eq 1
+            end
           end
 
-          it 'creates records in the database for liked messages' do
-            expect(LikedMessage.count).to eq 1
+          context 'when the group does not exist' do
+            context 'when GroupMe recognizes the group' do
+              let(:file) { fixture_file_upload('valid_messages_json.json') }
+              let(:group_info) do
+                {
+                  meta: {
+                    code: 200
+                  },
+                  response: {
+                    id: '12345',
+                    name: 'some name'
+                  }
+                }
+              end
+
+              before do
+                allow(Group).to receive(:get_info_from_groupme).and_return(group_info)
+                post '/upload', params: { file: file }
+              end
+
+              it 'creates records in the database for liked messages' do
+                expect(LikedMessage.count).to eq 1
+              end
+
+              it 'creates a group in the database' do
+                expect(Group.count).to eq 1
+              end
+            end
+
+            context 'when GroupMe does not recognize the group' do
+              let(:file) { fixture_file_upload('valid_messages_json.json') }
+              let(:group_info) do
+                {
+                  meta: {
+                    code: 404
+                  }
+                }
+              end
+
+              before do
+                allow(Group).to receive(:get_info_from_groupme).and_return(group_info)
+                post '/upload', params: { file: file }
+              end
+
+              it 'does not create a liked message in the database' do
+                expect(LikedMessage.count).to eq 0
+              end
+
+              it 'does not create a group in the database' do
+                expect(Group.count).to eq 0
+              end
+            end
           end
         end
 

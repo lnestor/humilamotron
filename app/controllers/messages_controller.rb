@@ -6,8 +6,22 @@ class MessagesController < ApplicationController
   before_action :call_groupme_api
 
   def incoming
-    @messages.each do |message|
-      LikedMessageChecker.check_message(message)
+    @messages.each do |msg|
+      next if !LikedMessage.liked_own_message?(msg)
+      next if LikedMessage.exists?(groupme_id: msg[:id])
+
+      if !User.exists?(groupme_id: msg[:user_id])
+        User.create!(groupme_id: msg[:user_id], name: msg[:name])
+      end
+
+      LikedMessage.create!(
+        user: User.find_by_groupme_id(msg[:user_id]),
+        content: msg[:text],
+        group: Group.find_by_groupme_id(msg[:group_id]),
+        groupme_id: msg[:id],
+        image_url: LikedMessage.get_image(msg),
+        created_at: Time.at(msg[:created_at])
+      )
     end
   end
 

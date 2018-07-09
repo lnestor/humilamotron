@@ -73,28 +73,6 @@ RSpec.describe 'receiving messages from GroupMe', type: :request do
             expect(LikedMessage.first.user.groupme_id).to eq 12345
           end
         end
-
-        context 'when the message has an image attachment' do
-          let(:favorited_by) { ["#{user_id}"] }
-          let(:attachments) { [{ type: "image", url: "some url" }] }
-
-          before { post '/messages', params: post_params }
-
-          it 'adds an image url to the record in the database' do
-            expect(LikedMessage.first.image_url).to eq 'some url'
-          end
-        end
-
-        context 'when the message has a non image attachment' do
-          let(:favorited_by) { ["#{user_id}"] }
-          let(:attachments) { [{ type: "some type" }] }
-
-          before { post '/messages', params: post_params }
-
-          it 'does not add an image url to the database' do
-            expect(LikedMessage.first.image_url).to eq nil
-          end
-        end
       end
 
       context 'when the message has already been logged' do
